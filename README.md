@@ -31,6 +31,60 @@
 $ npm install
 ```
 
+## Database Setup
+
+### Pré-requisitos
+- Docker e Docker Compose instalados
+
+### Configuração do Banco de Dados
+
+1. **Iniciar o banco de dados:**
+```bash
+# Usando o script helper
+./docker-scripts.sh start
+
+# Ou diretamente com docker-compose
+docker-compose up -d
+```
+
+2. **Configurar variáveis de ambiente:**
+```bash
+# Copiar o arquivo de exemplo
+cp env.example .env
+
+# Editar as configurações se necessário
+```
+
+### Comandos úteis do Docker
+
+```bash
+# Ver status dos containers
+./docker-scripts.sh status
+
+# Parar o banco
+./docker-scripts.sh stop
+
+# Reiniciar o banco
+./docker-scripts.sh restart
+
+# Ver logs
+./docker-scripts.sh logs
+
+# Resetar banco (cuidado: apaga todos os dados)
+./docker-scripts.sh reset
+
+# Limpar cache do Docker
+./docker-scripts.sh cleanup
+```
+
+### Configurações do Banco
+- **Host**: localhost
+- **Porta**: 5432
+- **Database**: task_manager_db
+- **Usuário**: admin
+- **Senha**: root
+- **Dialect**: postgres
+
 ## Compile and run the project
 
 ```bash
