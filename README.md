@@ -31,6 +31,21 @@
 $ npm install
 ```
 
+## Migrations (Sequelize)
+
+Scripts adicionados:
+```bash
+npm run db:migrate         # Executa migrations
+npm run db:migrate:undo    # Desfaz a última migration
+npm run db:migrate:reset   # Desfaz todas as migrations
+npm run db:status          # Mostra status das migrations
+```
+
+Após subir o banco com Docker e configurar o `.env`, rode:
+```bash
+npm run db:migrate
+```
+
 ## Database Setup
 
 ### Pré-requisitos
