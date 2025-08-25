@@ -8,10 +8,13 @@ import {
   HttpStatus,
   ValidationPipe,
   UsePipes,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -33,6 +36,7 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   async findAll(): Promise<{
     message: string;
@@ -49,6 +53,7 @@ export class UsersController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id') id: string): Promise<{
     message: string;
@@ -58,6 +63,21 @@ export class UsersController {
 
     return {
       message: 'Usuário encontrado com sucesso',
+      user,
+    };
+  }
+
+  @Get('me/profile')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async getMyProfile(@CurrentUser() currentUser: any): Promise<{
+    message: string;
+    user: UserResponseDto;
+  }> {
+    const user = await this.usersService.findOne(currentUser.id);
+
+    return {
+      message: 'Seu perfil',
       user,
     };
   }
