@@ -67,10 +67,6 @@ export class User extends Model {
   })
   declare verificationCode: string;
 
-  // Remover estas definições explícitas - o Sequelize as gerencia automaticamente
-  // declare createdAt: Date;
-  // declare updatedAt: Date;
-
   // Hook apenas para gerar UUID automaticamente
   @BeforeCreate
   static generateId(instance: User) {
@@ -79,7 +75,6 @@ export class User extends Model {
     }
   }
 
-  // Método para obter o nome completo
   get fullName(): string {
     return `${this.firstName} ${this.lastName}`;
   }

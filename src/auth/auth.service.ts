@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, InternalServerErrorException  } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
@@ -14,47 +14,57 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.usersService.findByEmail(email);
-    
+
     if (user && await bcrypt.compare(password, user.password)) {
       const { password, ...result } = user.toJSON();
       return result;
     }
-    
+
     return null;
   }
 
   async login(loginDto: LoginDto): Promise<LoginResponseDto> {
-    const user = await this.validateUser(loginDto.email, loginDto.password);
-    
-    if (!user) {
-      throw new UnauthorizedException('Email ou senha inválidos');
-    }
+    try {
+      const user = await this.validateUser(loginDto.email, loginDto.password);
 
-    // Atualizar último login
-    await this.usersService.updateLastLogin(user.id);
+      if (!user) {
+        throw new UnauthorizedException('Email ou senha inválidos');
+      }
 
-    const payload = { 
-      sub: user.id, 
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-    };
+      // Atualizar último login
+      await this.usersService.updateLastLogin(user.id);
 
-    return {
-      message: 'Login realizado com sucesso',
-      user: {
-        id: user.id,
+      const payload = {
+        sub: user.id,
+        email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-        email: user.email,
-        lastLoginAt: user.lastLoginAt,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-        fullName: user.fullName,
-      },
-      accessToken: this.jwtService.sign(payload),
-      expiresIn: '24h',
-    };
+      };
+
+      return {
+        message: 'Login realizado com sucesso',
+        user: {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          lastLoginAt: user.lastLoginAt,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+          fullName: user.fullName,
+        },
+        accessToken: this.jwtService.sign(payload),
+        expiresIn: '24h',
+      };
+    } catch (error) {
+      // se for um erro já tratado, relança
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+
+      // caso contrário, retorna 500
+      throw new InternalServerErrorException('Não foi possível realizar a requisição.');
+    }
   }
 
   async verifyToken(token: string): Promise<any> {

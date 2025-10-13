@@ -23,7 +23,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const exceptionResponse = exception.getResponse();
-      
+
       if (typeof exceptionResponse === 'object') {
         message = (exceptionResponse as any).message || exception.message;
         error = (exceptionResponse as any).error || exception.name;
@@ -32,7 +32,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         error = exception.name;
       }
     }
-    
+
     // Tratar erros do Sequelize
     else if (exception instanceof QueryError) {
       status = HttpStatus.BAD_REQUEST;

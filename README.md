@@ -23,7 +23,25 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+**Task Manager API** - Uma API RESTful para gerenciamento de tarefas construída com [NestJS](https://github.com/nestjs/nest) framework TypeScript.
+
+### ✨ Funcionalidades
+
+- 🔐 **Autenticação JWT** - Sistema completo de login e registro
+- 👥 **Gestão de Usuários** - CRUD completo com validações
+- 🛡️ **Validação de Dados** - Usando class-validator
+- 🗄️ **Banco PostgreSQL** - Com Sequelize ORM
+- 📚 **Documentação Swagger** - API interativa e auto-documentada
+- 🐳 **Docker** - Configuração completa para desenvolvimento
+
+### 🚀 Tecnologias
+
+- **Backend**: NestJS, TypeScript, Node.js
+- **Banco**: PostgreSQL, Sequelize
+- **Autenticação**: JWT, Passport
+- **Validação**: class-validator, class-transformer
+- **Documentação**: Swagger/OpenAPI
+- **Containerização**: Docker, Docker Compose
 
 ## Project setup
 
@@ -100,7 +118,30 @@ cp env.example .env
 - **Senha**: root
 - **Dialect**: postgres
 
-## Compile and run the project
+## 📚 Documentação da API (Swagger)
+
+A API possui documentação interativa completa usando Swagger/OpenAPI.
+
+### 🎯 Acessar o Swagger
+
+Após iniciar a aplicação, acesse:
+
+```
+http://localhost:3000/api
+```
+
+### 🔐 Como Usar
+
+1. **Registrar usuário**: Use `POST /users/register`
+2. **Fazer login**: Use `POST /auth/login` para obter token JWT
+3. **Autorizar**: Clique em "Authorize" e insira `Bearer SEU_TOKEN`
+4. **Testar endpoints**: Use "Try it out" para testar rotas
+
+### 📖 Documentação Detalhada
+
+Veja o [Guia Completo do Swagger](SWAGGER_GUIDE.md) para instruções detalhadas.
+
+## 🚀 Compile and run the project
 
 ```bash
 # development

@@ -42,31 +42,59 @@ export class UsersService {
   }
 
   async findAll(): Promise<UserResponseDto[]> {
-    const users = await this.userModel.findAll();
-    return users.map(user => user.toJSON() as UserResponseDto);
+    try{
+      const users = await this.userModel.findAll();
+      return users.map(user => user.toJSON() as UserResponseDto);
+    } catch (error) {
+      if (error instanceof ConflictException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Não foi possível realizar a requisição.');
+    }
   }
 
   async findOne(id: string): Promise<UserResponseDto> {
-    const user = await this.userModel.findByPk(id);
+    try{
+      const user = await this.userModel.findByPk(id);
 
-    if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
+      if (!user) {
+        throw new NotFoundException('Usuário não encontrado');
+      }
+
+      return user.toJSON() as UserResponseDto;
+    } catch (error) {
+      if (error instanceof ConflictException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Não foi possível realizar a requisição.');
     }
-
-    return user.toJSON() as UserResponseDto;
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return await this.userModel.findOne({
-      where: { email },
-    });
+    try{
+      return await this.userModel.findOne({
+        where: { email },
+      });
+    } catch (error) {
+      if (error instanceof ConflictException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Não foi possível realizar a requisição.');
+    }
   }
 
   async updateLastLogin(id: string): Promise<void> {
-    await this.userModel.update(
-      { lastLoginAt: new Date() },
-      { where: { id } }
-    );
+    try{
+      await this.userModel.update(
+        { lastLoginAt: new Date() },
+        { where: { id } }
+      );
+    } catch (error) {
+      if (error instanceof ConflictException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Não foi possível realizar a requisição.');
+    }
   }
 }
 

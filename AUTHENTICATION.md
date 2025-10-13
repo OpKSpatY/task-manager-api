@@ -45,30 +45,6 @@ GET /users/me/profile
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-## Rotas Protegidas
-
-As seguintes rotas requerem autenticação JWT:
-
-- `GET /users` - Listar todos os usuários
-- `GET /users/:id` - Buscar usuário por ID
-- `GET /users/me/profile` - Obter meu perfil
-- `GET /auth/profile` - Obter perfil do usuário autenticado
-- `GET /auth/verify` - Verificar se o token é válido
-
-## Rotas Públicas
-
-- `POST /users/register` - Registrar novo usuário
-- `POST /auth/login` - Fazer login
-
-## Configuração JWT
-
-As configurações JWT estão no arquivo `.env`:
-
-```env
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-JWT_EXPIRES_IN=24h
-```
-
 ## Estrutura do Token
 
 O JWT contém as seguintes informações:
