@@ -5,6 +5,7 @@ import {
   DataType,
   ForeignKey,
   BelongsTo,
+  HasMany,
   Default,
 } from 'sequelize-typescript';
 import { User } from '../users/user.model';
@@ -45,4 +46,6 @@ export class Organization extends Model<Organization> {
 
   @BelongsTo(() => User)
   creator: User;
+
+  // Relacionamento com projetos será definido no model Project
 }

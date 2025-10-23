@@ -50,5 +50,7 @@ export class Team extends Model<Team> {
 
   @HasMany(() => TeamUser)
   teamUsers: TeamUser[];
+
+  // Relacionamento com projetos será definido no model Project
 }
 
