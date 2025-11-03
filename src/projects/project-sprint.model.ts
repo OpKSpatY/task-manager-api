@@ -5,9 +5,11 @@ import {
   DataType,
   ForeignKey,
   BelongsTo,
+  HasMany,
   Default,
 } from 'sequelize-typescript';
 import { Project } from './project.model';
+import { ProjectTask } from './project-task.model';
 
 @Table({
   tableName: 'project_sprints',
@@ -53,5 +55,8 @@ export class ProjectSprint extends Model<ProjectSprint> {
     field: 'due_at',
   })
   dueAt: Date;
+
+  @HasMany(() => ProjectTask)
+  tasks: ProjectTask[];
 }
 
