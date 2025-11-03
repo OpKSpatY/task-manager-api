@@ -5,10 +5,12 @@ import {
   DataType,
   ForeignKey,
   BelongsTo,
+  HasMany,
   Default,
 } from 'sequelize-typescript';
 import { Organization } from '../organizations/organizations.model';
 import { Team } from '../teams/team.model';
+import { ProjectSprint } from './project-sprint.model';
 
 @Table({
   tableName: 'projects',
@@ -72,4 +74,7 @@ export class Project extends Model<Project> {
 
   @BelongsTo(() => Team)
   teamAssignment: Team;
+
+  @HasMany(() => ProjectSprint)
+  sprints: ProjectSprint[];
 }
