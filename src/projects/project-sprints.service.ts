@@ -357,9 +357,8 @@ export class ProjectSprintsService {
 
   async remove(id: string, userId: string): Promise<void> {
     try {
-      // Buscar sprint usando SQL raw para obter o projectId e organizationId
       const sprintResult = await this.organizationUserModel.sequelize?.query(
-        `SELECT ps.*, 
+        `SELECT ps.*,
                 p.organization_id
          FROM project_sprints ps
          LEFT JOIN projects p ON ps.project_id = p.id
@@ -383,7 +382,6 @@ export class ProjectSprintsService {
       // Verificar se o usuário tem permissão para excluir a sprint
       await this.checkUserProjectPermission(userId, sprint.organization_id);
 
-      // Excluir a sprint usando SQL raw
       await this.organizationUserModel.sequelize?.query(
         'DELETE FROM project_sprints WHERE id = :sprintId',
         {

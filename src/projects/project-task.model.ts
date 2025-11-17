@@ -9,6 +9,7 @@ import {
   Default,
 } from 'sequelize-typescript';
 import { ProjectSprint } from './project-sprint.model';
+import { TaskChecklist } from './task-checklist.model';
 
 export enum TaskStatus {
   FINISHED = 'finished',
@@ -86,5 +87,8 @@ export class ProjectTask extends Model<ProjectTask> {
 
   @HasMany(() => ProjectTask, 'task_depends_on')
   dependentTasks?: ProjectTask[];
+
+  @HasMany(() => TaskChecklist)
+  checklists: TaskChecklist[];
 }
 
