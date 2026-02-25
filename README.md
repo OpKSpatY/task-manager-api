@@ -1,208 +1,172 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Task Manager API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API REST para gerenciamento de tarefas em equipe: usuários, organizações, times, projetos, sprints e tarefas com checklists. Desenvolvida com [NestJS](https://nestjs.com) e TypeScript.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## O que esta API faz
 
-## Description
+- **Autenticação**: registro, login e verificação de token JWT.
+- **Usuários**: CRUD de usuários e perfil do usuário autenticado.
+- **Organizações**: criar organizações, adicionar/remover usuários e gerenciar permissões (admin/membro).
+- **Times**: criar times, adicionar/remover membros (dono do time).
+- **Projetos**: projetos vinculados a organizações e times, com sprints, tarefas, dependências entre tarefas, checklists e itens de checklist.
 
-**Task Manager API** - Uma API RESTful para gerenciamento de tarefas construída com [NestJS](https://github.com/nestjs/nest) framework TypeScript.
+A maior parte dos endpoints exige autenticação via Bearer JWT. A documentação interativa fica em `/api` (Swagger).
 
-### ✨ Funcionalidades
+## Tecnologias
 
-- 🔐 **Autenticação JWT** - Sistema completo de login e registro
-- 👥 **Gestão de Usuários** - CRUD completo com validações
-- 🛡️ **Validação de Dados** - Usando class-validator
-- 🗄️ **Banco PostgreSQL** - Com Sequelize ORM
-- 📚 **Documentação Swagger** - API interativa e auto-documentada
-- 🐳 **Docker** - Configuração completa para desenvolvimento
+| Área            | Stack                          |
+|-----------------|--------------------------------|
+| Backend         | NestJS, TypeScript, Node.js    |
+| Banco de dados  | PostgreSQL, Sequelize         |
+| Autenticação    | JWT, Passport                 |
+| Validação       | class-validator, class-transformer |
+| Documentação   | Swagger/OpenAPI               |
+| Infra           | Docker, Docker Compose        |
 
-### 🚀 Tecnologias
+## Pré-requisitos
 
-- **Backend**: NestJS, TypeScript, Node.js
-- **Banco**: PostgreSQL, Sequelize
-- **Autenticação**: JWT, Passport
-- **Validação**: class-validator, class-transformer
-- **Documentação**: Swagger/OpenAPI
-- **Containerização**: Docker, Docker Compose
+- **Node.js** 18+ e npm
+- **PostgreSQL** 15 (recomendado via Docker)
+- **Docker** e **Docker Compose** (para subir o banco)
 
-## Project setup
+## Como inicializar
+
+### 1. Instalar dependências
 
 ```bash
-$ npm install
+npm install
 ```
 
-## Migrations (Sequelize)
+### 2. Subir o banco de dados
 
-Scripts adicionados:
+Com Docker Compose (Linux/macOS ou Git Bash no Windows):
+
 ```bash
-npm run db:migrate         # Executa migrations
-npm run db:migrate:undo    # Desfaz a última migration
-npm run db:migrate:reset   # Desfaz todas as migrations
-npm run db:status          # Mostra status das migrations
+docker-compose up -d
 ```
 
-Após subir o banco com Docker e configurar o `.env`, rode:
+No Windows (PowerShell/CMD), use diretamente:
+
+```bash
+docker-compose up -d
+```
+
+O PostgreSQL sobe na porta **5432** com usuário `admin`, senha `root` e banco `task_manager_db`.
+
+### 3. Configurar variáveis de ambiente
+
+```bash
+cp env.example .env
+```
+
+Edite o `.env` se precisar (host, porta, usuário, senha, `JWT_SECRET`, `PORT`). Os valores padrão do `env.example` batem com o `docker-compose.yml`.
+
+### 4. Rodar as migrations
+
 ```bash
 npm run db:migrate
 ```
 
-## Database Setup
-
-### Pré-requisitos
-- Docker e Docker Compose instalados
-
-### Configuração do Banco de Dados
-
-1. **Iniciar o banco de dados:**
-```bash
-# Usando o script helper
-./docker-scripts.sh start
-
-# Ou diretamente com docker-compose
-docker-compose up -d
-```
-
-2. **Configurar variáveis de ambiente:**
-```bash
-# Copiar o arquivo de exemplo
-cp env.example .env
-
-# Editar as configurações se necessário
-```
-
-### Comandos úteis do Docker
+### 5. Iniciar a aplicação
 
 ```bash
-# Ver status dos containers
-./docker-scripts.sh status
-
-# Parar o banco
-./docker-scripts.sh stop
-
-# Reiniciar o banco
-./docker-scripts.sh restart
-
-# Ver logs
-./docker-scripts.sh logs
-
-# Resetar banco (cuidado: apaga todos os dados)
-./docker-scripts.sh reset
-
-# Limpar cache do Docker
-./docker-scripts.sh cleanup
+npm run start:dev
 ```
 
-### Configurações do Banco
-- **Host**: localhost
-- **Porta**: 5432
-- **Database**: task_manager_db
-- **Usuário**: admin
-- **Senha**: root
-- **Dialect**: postgres
+A API fica em **http://localhost:3000** (ou na `PORT` do `.env`).
+Documentação Swagger: **http://localhost:3000/api**.
 
-## 📚 Documentação da API (Swagger)
+---
 
-A API possui documentação interativa completa usando Swagger/OpenAPI.
+## Comandos úteis
 
-### 🎯 Acessar o Swagger
-
-Após iniciar a aplicação, acesse:
-
-```
-http://localhost:3000/api
-```
-
-### 🔐 Como Usar
-
-1. **Registrar usuário**: Use `POST /users/register`
-2. **Fazer login**: Use `POST /auth/login` para obter token JWT
-3. **Autorizar**: Clique em "Authorize" e insira `Bearer SEU_TOKEN`
-4. **Testar endpoints**: Use "Try it out" para testar rotas
-
-### 📖 Documentação Detalhada
-
-Veja o [Guia Completo do Swagger](SWAGGER_GUIDE.md) para instruções detalhadas.
-
-## 🚀 Compile and run the project
+### Aplicação
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run start          # Produção (build + node)
+npm run start:dev      # Desenvolvimento com watch
+npm run start:debug    # Debug com watch
+npm run build          # Build para produção
 ```
 
-## Run tests
+### Migrations (Sequelize)
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run db:migrate         # Executa migrations
+npm run db:migrate:undo    # Desfaz a última migration
+npm run db:migrate:reset   # Desfaz todas as migrations
+npm run db:status          # Status das migrations
 ```
 
-## Deployment
+### Docker (banco)
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Se você usar o `docker-scripts.sh` (bash):
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+./docker-scripts.sh start    # Inicia o PostgreSQL
+./docker-scripts.sh stop     # Para
+./docker-scripts.sh restart  # Reinicia
+./docker-scripts.sh status   # Status dos containers
+./docker-scripts.sh logs     # Logs do PostgreSQL
+./docker-scripts.sh reset    # Reseta o banco (apaga dados)
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Ou use diretamente:
 
-## Resources
+```bash
+docker-compose up -d    # Subir
+docker-compose down     # Parar
+docker-compose ps       # Status
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+### Testes
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+npm run test        # Testes unitários
+npm run test:e2e    # Testes e2e
+npm run test:cov    # Cobertura
+```
 
-## Support
+### Lint e formatação
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+npm run lint        # ESLint
+npm run format      # Prettier
+```
 
-## Stay in touch
+## Documentação da API (Swagger)
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Com a aplicação rodando, acesse:
 
-## License
+**http://localhost:3000/api**
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Fluxo sugerido:
+
+1. **Registrar**: `POST /users/register` (nome, email, senha).
+2. **Login**: `POST /auth/login` (email, senha) → recebe `accessToken`.
+3. **Autorizar**: no Swagger, clique em **Authorize** e informe `Bearer <accessToken>`.
+4. Testar os demais endpoints (organizations, teams, projects, etc.).
+
+Guia detalhado: [SWAGGER_GUIDE.md](SWAGGER_GUIDE.md).
+Resumo de rotas em texto: [src/docs/API_ROUTES.md](src/docs/API_ROUTES.md).
+
+## Estrutura dos módulos
+
+- **auth** – login, registro, verificação de token, perfil.
+- **users** – CRUD de usuários e perfil (`/users/me/profile`).
+- **organizations** – CRUD de organizações e gestão de usuários (roles).
+- **teams** – CRUD de times e membros.
+- **projects** – projetos, sprints, tarefas, checklists e itens de checklist.
+
+Permissões são verificadas por organização/time/projeto conforme regras de negócio (criador, admin, membro).
+
+## Documentação adicional
+
+- [SWAGGER_GUIDE.md](SWAGGER_GUIDE.md) – uso do Swagger.
+- [src/docs/API_ROUTES.md](src/docs/API_ROUTES.md) – rotas de usuários e auth (exemplos).
+- [src/docs/EXEMPLO_API_PROJETOS.md](src/docs/EXEMPLO_API_PROJETOS.md) – exemplos de uso da API de projetos.
+- [src/database/init/](src/database/init/) – notas sobre Docker e configuração do banco.
+
+## Licença
+
+MIT.
